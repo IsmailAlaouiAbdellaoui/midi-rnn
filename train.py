@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import os, argparse, time
 import utils
-import tensorflow as tf
-from tf.keras.models import Sequential
-from tf.keras.layers import Dense, Activation, Dropout
-from tf.keras.layers import LSTM
-from tf.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-from tf.keras.optimizers import SGD, RMSprop, Adagrad, Adadelta, Adam, Adamax, Nadam
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation, Dropout
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, TensorBoard
+from tensorflow.keras.optimizers import SGD, RMSprop, Adagrad, Adadelta, Adam, Adamax, Nadam
 
 OUTPUT_SIZE = 129 # 0-127 notes + 1 for rests
 
