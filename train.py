@@ -166,7 +166,7 @@ def main():
                       for path in os.listdir(args.data_dir) \
                       if '.mid' in path or '.midi' in path]
     except OSError as e:
-        log('Error: Invalid --data_dir, {} directory does not exist. Exiting.', args.verbose)
+        utils.log('Error: Invalid --data_dir, {} directory does not exist. Exiting.', args.verbose)
         exit(1)
         
     print(args.data_dir)
