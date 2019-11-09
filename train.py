@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import os, argparse, time
 import utils
-#from keras.models import Sequential
-#from keras.layers import Dense, Activation, Dropout
-#from keras.layers import LSTM
-#from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-#from keras.optimizers import SGD, RMSprop, Adagrad, Adadelta, Adam, Adamax, Nadam
+import tensorflow as tf
+from tf.keras.models import Sequential
+from tf.keras.layers import Dense, Activation, Dropout
+from tf.keras.layers import LSTM
+from tf.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, TensorBoard
+from tf.keras.optimizers import SGD, RMSprop, Adagrad, Adadelta, Adam, Adamax, Nadam
 
 OUTPUT_SIZE = 129 # 0-127 notes + 1 for rests
 
@@ -172,69 +173,69 @@ def main():
     print(args.data_dir)
     print(args.experiment_dir)
 
-#    utils.log(
-#        'Found {} midi files in {}'.format(len(midi_files), args.data_dir),
-#        args.verbose
-#    )
-#
-#    if len(midi_files) < 1:
-#        utils.log(
-#            'Error: no midi files found in {}. Exiting.'.format(args.data_dir),
-#            args.verbose
-#        )
-#        exit(1)
-#
-#    # create the experiment directory and return its name
-#    experiment_dir = utils.create_experiment_dir(args.experiment_dir, args.verbose)
-#
-#    # write --message to experiment_dir
-#    if args.message:
-#        with open(os.path.join(experiment_dir, 'message.txt'), 'w') as f:
-#            f.write(args.message)
-#            utils.log('Wrote {} bytes to {}'.format(len(args.message), 
-#                os.path.join(experiment_dir, 'message.txt')), args.verbose)
-#
-#    val_split = 0.2 # use 20 percent for validation
-#    val_split_index = int(float(len(midi_files)) * val_split)
-#
-#    # use generators to lazy load train/validation data, ensuring that the
-#    # user doesn't have to load all midi files into RAM at once
-#    train_generator = utils.get_data_generator(midi_files[0:val_split_index], 
-#                                               window_size=args.window_size,
-#                                               batch_size=args.batch_size,
-#                                               num_threads=args.n_jobs,
-#                                               max_files_in_ram=args.max_files_in_ram)
-#
-#    val_generator = utils.get_data_generator(midi_files[val_split_index:], 
-#                                             window_size=args.window_size,
-#                                             batch_size=args.batch_size,
-#                                             num_threads=args.n_jobs,
-#                                             max_files_in_ram=args.max_files_in_ram)
-#
-#    model, epoch = get_model(args)
-#    if args.verbose:
-#        print(model.summary())
-#
-#    utils.save_model(model, experiment_dir)
-#    utils.log('Saved model to {}'.format(os.path.join(experiment_dir, 'model.json')),
-#              args.verbose)
-#
-#    callbacks = get_callbacks(experiment_dir)
-#    
-#    print('fitting model...')
-#    # this is a somewhat magic number which is the average number of length-20 windows
-#    # calculated from ~5K MIDI files from the Lakh MIDI Dataset.
-#    magic_number = 827
-#    start_time = time.time()
-#    model.fit_generator(train_generator,
-#                        steps_per_epoch=len(midi_files) * magic_number / args.batch_size, 
-#                        epochs=args.num_epochs,
-#                        validation_data=val_generator, 
-#                        validation_steps=len(midi_files) * 0.2 * magic_number / args.batch_size,
-#                        verbose=1, 
-#                        callbacks=callbacks,
-#                        initial_epoch=epoch)
-#    utils.log('Finished in {:.2f} seconds'.format(time.time() - start_time), args.verbose)
+    utils.log(
+        'Found {} midi files in {}'.format(len(midi_files), args.data_dir),
+        args.verbose
+    )
+
+    if len(midi_files) < 1:
+        utils.log(
+            'Error: no midi files found in {}. Exiting.'.format(args.data_dir),
+            args.verbose
+        )
+        exit(1)
+
+    # create the experiment directory and return its name
+    experiment_dir = utils.create_experiment_dir(args.experiment_dir, args.verbose)
+
+    # write --message to experiment_dir
+    if args.message:
+        with open(os.path.join(experiment_dir, 'message.txt'), 'w') as f:
+            f.write(args.message)
+            utils.log('Wrote {} bytes to {}'.format(len(args.message), 
+                os.path.join(experiment_dir, 'message.txt')), args.verbose)
+
+    val_split = 0.2 # use 20 percent for validation
+    val_split_index = int(float(len(midi_files)) * val_split)
+
+    # use generators to lazy load train/validation data, ensuring that the
+    # user doesn't have to load all midi files into RAM at once
+    train_generator = utils.get_data_generator(midi_files[0:val_split_index], 
+                                               window_size=args.window_size,
+                                               batch_size=args.batch_size,
+                                               num_threads=args.n_jobs,
+                                               max_files_in_ram=args.max_files_in_ram)
+
+    val_generator = utils.get_data_generator(midi_files[val_split_index:], 
+                                             window_size=args.window_size,
+                                             batch_size=args.batch_size,
+                                             num_threads=args.n_jobs,
+                                             max_files_in_ram=args.max_files_in_ram)
+
+    model, epoch = get_model(args)
+    if args.verbose:
+        print(model.summary())
+
+    utils.save_model(model, experiment_dir)
+    utils.log('Saved model to {}'.format(os.path.join(experiment_dir, 'model.json')),
+              args.verbose)
+
+    callbacks = get_callbacks(experiment_dir)
+    
+    print('fitting model...')
+    # this is a somewhat magic number which is the average number of length-20 windows
+    # calculated from ~5K MIDI files from the Lakh MIDI Dataset.
+    magic_number = 827
+    start_time = time.time()
+    model.fit_generator(train_generator,
+                        steps_per_epoch=len(midi_files) * magic_number / args.batch_size, 
+                        epochs=args.num_epochs,
+                        validation_data=val_generator, 
+                        validation_steps=len(midi_files) * 0.2 * magic_number / args.batch_size,
+                        verbose=1, 
+                        callbacks=callbacks,
+                        initial_epoch=epoch)
+    utils.log('Finished in {:.2f} seconds'.format(time.time() - start_time), args.verbose)
 
 if __name__ == '__main__':
     main()
