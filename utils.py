@@ -1,21 +1,21 @@
 import os, glob, random
-import pretty_midi
+#import pretty_midi
 import numpy as np
-from keras.models import model_from_json
+#from keras.models import model_from_json
 from multiprocessing import Pool as ThreadPool
 
 def log(message, verbose):
 	if verbose:
 		print('[*] {}'.format(message))
 
-def parse_midi(path):
-    midi = None
-    try:
-        midi = pretty_midi.PrettyMIDI(path)
-        midi.remove_invalid_notes()
-    except Exception as e:
-        raise Exception(("%s\nerror readying midi file %s" % (e, path)))
-    return midi
+#def parse_midi(path):
+#    midi = None
+#    try:
+#        midi = pretty_midi.PrettyMIDI(path)
+#        midi.remove_invalid_notes()
+#    except Exception as e:
+#        raise Exception(("%s\nerror readying midi file %s" % (e, path)))
+#    return midi
 
 def get_percent_monophonic(pm_instrument_roll):
     mask = pm_instrument_roll.T > 0
